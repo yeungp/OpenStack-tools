@@ -703,14 +703,14 @@ class MyTenantSecurityGroup(object):
         start = time.time()
         try:
             for tenant in self.orphans:
-                s = "DELETE FROM securitygroups WHERE tenant_id = '%s'" % (tenant)
-                self.db.cur.execute(s)
+                s = "DELETE FROM securitygroups WHERE tenant_id = '%s' AND id NOT IN (SELECT security_group_id FROM securitygroupportbindings)" % (tenant)
+                num = self.db.cur.execute(s)
                 self.db.conn.commit()
-                count = count + len(self.orphans[tenant])
+                count = count + num
                 logger.debug("%s:%s() %d: removed %d security groups from tenant %s",
                              self.__class__.__name__,
                              sys._getframe().f_code.co_name, sys._getframe().f_lineno,
-                             len(self.orphans[tenant]), tenant)
+                             num, tenant)
         except:
             logger.warning("%s:%s() %d: %s %s", self.__class__.__name__,
                            sys._getframe().f_code.co_name, sys._getframe().f_lineno,
