@@ -12,7 +12,7 @@ import os
 import time
 from datetime import datetime
 from optparse import OptionParser
-from matplotlib import pyplot, dates
+# from matplotlib import pyplot, dates
 import re
 import pdb
 
@@ -294,6 +294,9 @@ def do_parsing():
         sys.exit()
 
     flags, args = parser.parse_args()
+    if flags.help and len(args) == 0:
+        usage()
+
     if len(args) == 0 or (args[0] != 'collect' and args[0] != 'extract'):
         logger.error("%s() %d: invalid options!",
                      __name__, sys._getframe().f_lineno)
